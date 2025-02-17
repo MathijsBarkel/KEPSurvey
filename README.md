@@ -25,6 +25,6 @@ These files have a name of the format "uk_2019_splitpra_bandxmatch_pra0_pdd\_{x}
 - y in {50, 100, 200, 500, 750, 1000} specifies the number of RDPs; and
 - z in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} specifies the instance index.
 
-The results of our computational experiments based on this code can be found on https://www.optimalmatching.com/kep-survey-2025/
+The results of our computational experiments based on this code can be found on https://www.optimalmatching.com/kep-survey-2025/.
 
 For questions on the code, send an e-mail to mathijsbarkel3@gmail.com.
