@@ -32,4 +32,4 @@ The results of our computational experiments based on this code can be found on 
 For questions on the code, send an e-mail to mathijsbarkel3@gmail.com.
 
 References:
-- Delorme, M., Garc´ıa, S., Gondzio, J., Kalcsics, J., Manlove, D., Pettersson, W., and Trimble, J. (2022). Improved instance generation for kidney exchange programmes. Computers & Operations Research, 141:105707.
+- Delorme, M., García, S., Gondzio, J., Kalcsics, J., Manlove, D., Pettersson, W., and Trimble, J. (2022). Improved instance generation for kidney exchange programmes. Computers & Operations Research, 141:105707.
