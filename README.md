@@ -8,28 +8,39 @@ All algorithms are coded in C++ and require the commercial solver Gurobi (we use
 - helper_functions.h/cpp - code containing miscellaneous simple/supportive functions.
 
 The file main.cpp is meant to be self-explanatory, one simply needs to make the following ten choices:
-1. Choose which instance to solve.
-2. Decide whether to solve the problem hierarchically (first maximize number of transplants, then maximize weight).
+1. Choose an instance file containing a compatibility graph(*).
+2. Decide whether to solve the problem hierarchically (first maximise the number of transplants, then maximise the weight).
 3. Decide whether to solve the unweighted or weighted variant of the instance.
 4. Decide whether to count the weights to the terminal vertex tau (representing donations to the DDWL or donors becoming bridge donors).
 5. Determine the maximum cycle and chain length.
-6. Determine which cycle and chain models to apply and/or which hybrid models to apply.
+6. Determine which cycle and chain models to apply and/or which hybrid models to apply(**).
 7. Determine if reduced cost variable fixing should be used.
 8. Determine if the LP relaxation should be solved seperately.
 9. Determine the time limit per run (in seconds).
 10. Determine what information to print.
 
-Moreover, "Instances.zip" contains a JSON-file for each compatibility graph. Our instances are defined by the chosen compatibility graph together with choices 2-5.
+(*)The JSON-files for the compatibility graphs used in our experiments are available for download at https://researchdata.gla.ac.uk/1878/. 
+That webpage also contains a README file detailing the structure of these instance files.
+These files, together with choices 2-5, define our instances. 
 Our compatibility graphs are generated using the instance generator created by Delorme et al. (2022), which is available at https://wpettersson.github.io/kidney-webapp/#/generator.
 More specifically, we used their ``SplitPRA BandXMatch PRA0'' profile, which was shown by these authors to create instances with similar characteristics to those found in historical UKLKSS datasets.
-Each JSON file has a name of the format "uk_2019_splitpra_bandxmatch_pra0_pdd\_{x}\_{y}\_{z}", where:
-- x in {0.05, 0.10, 0.20} specifies the number of NDDs |N| relative to the number of RDPs |R|, namely x = |N|/|R|;
-- y in {50, 100, 200, 500, 750, 1000} specifies the number of RDPs; and
-- z in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} specifies the instance index.
+The results of our computational experiments based on this code and these instances can be found on https://www.optimalmatching.com/kep-survey-2025/.
 
-The results of our computational experiments based on this code can be found on https://www.optimalmatching.com/kep-survey-2025/.
+(**)This code also contains some uncompetitive models that were not part of the final computational experiments presented in the paper. Namely:
+- HCF-CHAIN-ALT1, HCF-CHAIN-ALT2 and HCF-CHAIN-ALT3 are some variants of HCF-CHAIN.
+- EF-CYCLE-OLD is a variant of EF-CYCLE (discussed in Appendix A.3) in that includes constraints (59) instead of constraints (19).
+- EF-CYCLE-STRONG is a variant of EF-CYCLE (discussed in Appendix A.3) that includes constraints (60) instead of constraints (19).
+- EF-CHAIN-EXP-STRONG is a variant of EF-CHAIN-EXP that includes a lifted version of constraints (25).
+- EF-CHAIN-CUTSET is a variant of EF-CHAIN-EXP (discussed in Appendix A.3) that includes constraints (61) instead of constraints (25).
+- EF-CHAIN-CUTSET is a variant of EF-CHAIN-EXP that includes a lifted version of constraints (61) instead of constraints (25).
+- EF-HYBRID-IMPROVED is a variant of EF-HYBRID (discussed in Appendix A.3) that takes into account special cases o the relationship between K and L.
+- EEF-CYCLE-OLD is a variant of EEF-CYCLE (discussed in Appendix A.3) that includes constraints (63) and (64) instead of constraints (38).
+- EEF-CYCLE-STRONG is a variant of EEF-CYCLE (discussed in Appendix A.3) that includes constraints (64) on top of constraints (38).
+- EEF-CHAIN-CUTSET is a variant of EEF-CHAIN-EXP (discussed in Appendix A.3) that includes constraints (62) instead of constraints (45).
+- PIEF-CYCLE-REDUCED is a variant of PIEF-CYCLE (discussed in Section 4.6) that does not include the variables for positions 1 and K.
+Moreover, one can apply constraint generation to models containing an exponential number of constraints by adding the suffix -CG to the model name. In the paper, we only present results for the -CG variants of the tested models.
 
-For questions on the code, send an e-mail to mathijsbarkel3@gmail.com.
+For questions on the code, please send an e-mail to mathijsbarkel3@gmail.com.
 
 References:
 - Delorme, M., García, S., Gondzio, J., Kalcsics, J., Manlove, D., Pettersson, W., and Trimble, J. (2022). Improved instance generation for kidney exchange programmes. Computers & Operations Research, 141:105707.
