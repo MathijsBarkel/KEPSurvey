@@ -26,7 +26,7 @@ Our compatibility graphs are generated using the instance generator created by D
 More specifically, we used their ``SplitPRA BandXMatch PRA0'' profile, which was shown by these authors to create instances with similar characteristics to those found in historical UKLKSS datasets.
 The results of our computational experiments based on this code and these instances can be found on https://www.optimalmatching.com/kep-survey-2025/.
 
-(**)This code also contains some uncompetitive models that were not part of the final computational experiments presented in the paper, but that were mentioned in Appendix A.3 or in Section 4.6) Namely:
+(**)This code also contains some uncompetitive models that were not part of the final computational experiments presented in the paper, but that were mentioned in Appendix A.3 or in Section 4.6). Namely:
 - EF-CYCLE-OLD is a variant of EF-CYCLE in that includes constraints (59) instead of constraints (19).
 - EF-CYCLE-STRONG is a variant of EF-CYCLE that includes constraints (60) instead of constraints (19).
 - EF-CHAIN-CUTSET is a variant of EF-CHAIN-EXP that includes constraints (61) instead of constraints (25).
@@ -35,7 +35,7 @@ The results of our computational experiments based on this code and these instan
 - EEF-CYCLE-STRONG is a variant of EEF-CYCLE that includes constraints (64) on top of constraints (38).
 - EEF-CHAIN-CUTSET is a variant of EEF-CHAIN-EXP that includes constraints (62) instead of constraints (45).
 - PIEF-CYCLE-REDUCED is a variant of PIEF-CYCLE (discussed in Section 4.6) that does not include the variables for positions 1 and K.
-Moreover, one can apply constraint generation to models containing an exponential number of constraints by adding the suffix -CG to the model name. In the paper, we only present results for the -CG variants of the tested models.
+- Moreover, one can apply constraint generation to models containing an exponential number of constraints by adding the suffix -CG to the model name. In the paper, we only present results for the -CG variants of the tested models.
 
 For questions on the code, please send an e-mail to mathijsbarkel3[at]gmail[dot]com.
 
