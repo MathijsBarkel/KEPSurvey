@@ -1,5 +1,5 @@
 # KEPSurvey
-This repository contains the instances and code for all model combinations discussed in the paper "Operational research approaches and mathematical models for kidney exchange: A literature survey and empirical evaluation" by Mathijs Barkel, Rachael Colley, Maxence Delorme, David Manlove and William Pettersson.
+This repository contains the code for all model combinations discussed in the paper "Operational research approaches and mathematical models for kidney exchange: A literature survey and empirical evaluation" by Mathijs Barkel, Rachael Colley, Maxence Delorme, David Manlove and William Pettersson.
 
 All algorithms are coded in C++ and require the commercial solver Gurobi (we used version 10.0.3). The files have the following contents:
 - main.h/cpp             - example of front-end code for solving a given instance using any of the ILP models that we consider;
