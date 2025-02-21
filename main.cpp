@@ -43,26 +43,26 @@ int main() {
 	// CHOICE 7:
 	// - Determine if reduced cost variable fixing should be used
 	// - (RCVF can be used with any model combination, but we have improved code for combinations of CF-CYCLE, HCF-CYCLE or PIEF-CYCLE with CF-CHAIN or PIEF-CHAIN)
-	bool useRCVF = true;
+	bool useRCVF = false;
 
 	// CHOICE 8:
 	// - Determine if the LP relaxation should be computed seperately
-	bool solveLP = true;
+	bool solveLP = false;
 
 	// CHOICE 9: 
 	// - Determine the time limit (in seconds)
-	double timeLimit = 1;
+	double timeLimit = 3600;
 
 	// CHOICE 10:
 	// - Determine what to print 
-	bool printFullInstanceInfo = false;	// determine if the full instance information(i.e., the compatibility graph) should be printed
-	bool printGurobiLog = false;		// determine whether the Gurobi optimization log should be printed
-	bool printRCVFLog = false;			// determines if a log containing the RCVF progress is printed
-	int printSolution = -1;				// determines which solution statistics to print:
-										// -2: print a summary in just 1 line, excluding LP relaxation value
-										// -1: print a summary in just 1 line, including LP relaxation value
-										// 0: print a detailed report
-										// 1: print a detailed report, including the best feasible solution
+	bool printFullInstanceInfo = true;	// determine if the full instance information(i.e., the compatibility graph) should be printed
+	bool printGurobiLog = true;		// determine whether the Gurobi optimization log should be printed
+	bool printRCVFLog = true;		// determines if a log containing the RCVF progress is printed
+	int printSolution = 1;			// determines which solution statistics to print:
+						// -2: print a summary in just 1 line, excluding LP relaxation value
+						// -1: print a summary in just 1 line, including LP relaxation value
+						// 0: print a detailed report
+						// 1: print a detailed report, including the best feasible solution
 
 	//---------------------------APPLY ALL MODELS TO THE CHOSEN INSTANCE---------------------------
 	
