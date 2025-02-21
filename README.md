@@ -11,8 +11,8 @@ All algorithms are coded in C++ and require the commercial solver Gurobi (we use
 The file main.cpp is meant to be self-explanatory, one simply needs to make the following ten choices:
 1. Choose an instance file containing a compatibility graph(*).
 2. Decide whether to solve the problem hierarchically (first maximise the number of transplants, then maximise the weight).
-3. Decide whether to solve the unweighted or weighted variant of the instance.
-4. Decide whether to count the weights to the terminal vertex tau (representing donations to the DDWL or donors becoming bridge donors).
+3. Decide whether to solve the unweighted or weighted variant of the instance. (This choice is only relevant when not solving the problem hierarchically)
+4. Decide whether to count the weights corresponding to donations to the DDWL or donors becoming bridge donors.
 5. Determine the maximum cycle and chain length.
 6. Determine which cycle and chain models to apply and/or which hybrid models to apply(**).
 7. Determine if reduced cost variable fixing should be used.
@@ -21,8 +21,7 @@ The file main.cpp is meant to be self-explanatory, one simply needs to make the 
 10. Determine what information to print.
 
 (*)The JSON-files for the compatibility graphs used in our experiments are available for download at https://researchdata.gla.ac.uk/1878/. 
-That webpage also contains a README file detailing the structure of these instance files.
-These files, together with choices 2-5, define our instances. 
+That webpage also contains a README file detailing the structure of these instance files. These files, together with choices 2-5, define our instances. 
 Our compatibility graphs are generated using the instance generator created by Delorme et al. (2022), which is available at https://wpettersson.github.io/kidney-webapp/#/generator.
 More specifically, we used their ``SplitPRA BandXMatch PRA0'' profile, which was shown by these authors to create instances with similar characteristics to those found in historical UKLKSS datasets.
 The results of our computational experiments based on this code and these instances can be found on https://www.optimalmatching.com/kep-survey-2025/.
