@@ -77,7 +77,7 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 	vector<GRBLinExpr> secondHalfChainsPerStart;				// the number of second half-chains starting at each vertex
 	vector<GRBLinExpr> longFirstHalfChainsPerEnd;				// the number of first half-chains of maximum length ending at each vertex
 
-	// Declarations for EF-CHAIN-variants (EF-CHAIN-EXP, EF-CHAIN-EXP-CG, EF-CHAIN-EXP-STRONG, EF-CHAIN-CUTSET, EF-CHAIN-CUTSET-CG, EF-CHAIN-CUTSET-STRONG, EF-CHAIN-MTZ)
+	// Declarations for EF-CHAIN-variants (EF-CHAIN-EXP, EF-CHAIN-EXP-CG, EF-CHAIN-CUTSET, EF-CHAIN-CUTSET-CG, EF-CHAIN-MTZ)
 	Subgraph subgraphEFCHAIN;									// the reduced arc set
 	vector<vector<int>> minInfeasibleChains;					// all minimal infeasible chains (consisting of L vertices and L-1 arcs in R) (STANDARD(2)/CUTSET(2) only)
 	vector<GRBLinExpr> arcsUsedOnMinInfeasibleChain;			// the sum of all variables used per minimal infeasible chain (STANDARD(2)/CUTSET(2) only)
@@ -408,21 +408,15 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 			}
 		}
 
-		else if (sol.modelChain == "HCF-CHAIN" || sol.modelChain == "HCF-CHAIN-ALT1" || sol.modelChain == "HCF-CHAIN-ALT2" || sol.modelChain == "HCF-CHAIN-ALT3") {
+		else if (sol.modelChain == "HCF-CHAIN") {
 
-			if (sol.modelChain == "HCF-CHAIN") {halfChains = findHalfChains(inst);}
-			else if (sol.modelChain == "HCF-CHAIN-ALT1") { halfChains = findHalfChains(inst, true); }
-			else if (sol.modelChain == "HCF-CHAIN-ALT2" || sol.modelChain == "HCF-CHAIN-ALT3") { halfChains = findHalfChains(inst, false, true); }
+			halfChains = findHalfChains(inst);
 
 			// printCyclesOrChains(halfChains, "Half-chains", "half-chain");
 
 			// Determine the maximum half-chain length for both types
-			int limitLenH1;
-			if (sol.modelChain == "HCF-CHAIN-ALT1") { limitLenH1 = ceil(double(inst.L) / 2) + 1; }
-			else { limitLenH1 = floor(double(inst.L) / 2) + 1; }
-			int limitLenH2;
-			if (sol.modelChain == "HCF-CHAIN-ALT1") { limitLenH2 = floor(double(inst.L) / 2); }
-			else { limitLenH2 = ceil(double(inst.L) / 2); }
+			int limitLenH1 = floor(double(inst.L) / 2) + 1; 
+			int limitLenH2 = ceil(double(inst.L) / 2);
 
 
 			// Find the number of first half-chains ending at each vertex (of maximum length), and the number of second half-chains starting at each vertex
@@ -464,7 +458,7 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 			}
 		}
 
-		else if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-CG" || sol.modelChain == "EF-CHAIN-EXP-STRONG" || sol.modelChain == "EF-CHAIN-MTZ" || sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-STRONG" || sol.modelChain == "EF-CHAIN-CUTSET-CG") {
+		else if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-CG" || sol.modelChain == "EF-CHAIN-MTZ" || sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-CG") {
 			// Reduce A, and create mappings from the 2D-arcs to the arc indices, and vice versa
 			subgraphEFCHAIN = createSubgraphEFCHAIN(inst);
 			// printA(subgraphEFCHAIN.A, inst.wToTau, "Ared");
@@ -480,7 +474,7 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 				yOut[d] += y[a];
 				yIn[r] += y[a];
 			}
-			if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-STRONG" || sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-STRONG") {
+			if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-CUTSET") {
 				int d, r, a;
 
 				if (inst.L <= inst.nR) { // if L is not infinity, we need to add long chain elimination constraints
@@ -488,20 +482,9 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 					// print2DVector(minInfeasibleChains, "minInfeasibleChains", "chain");
 					arcsUsedOnMinInfeasibleChain.resize(minInfeasibleChains.size());
 					for (int c = 0; c < minInfeasibleChains.size(); c++) {
-						if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-CUTSET") {
-							for (int i = 0; i < minInfeasibleChains[c].size() - 1; i++) {
-								d = minInfeasibleChains[c][i]; r = minInfeasibleChains[c][i + 1]; a = subgraphEFCHAIN.arc2Idx[d][r];
-								arcsUsedOnMinInfeasibleChain[c] += y[a];
-							}
-						}
-						// Strengthened version
-						else if (sol.modelChain == "EF-CHAIN-EXP-STRONG" || sol.modelChain == "EF-CHAIN-CUTSET-STRONG") {
-							for (int i = 0; i < minInfeasibleChains[c].size() - 1; i++) {
-								for (int j = i + 1; j < minInfeasibleChains[c].size(); j++) {
-									d = minInfeasibleChains[c][i]; r = minInfeasibleChains[c][j]; a = subgraphEFCHAIN.arc2Idx[d][r];
-									if (a != -1) { arcsUsedOnMinInfeasibleChain[c] += y[a]; }
-								}
-							}
+						for (int i = 0; i < minInfeasibleChains[c].size() - 1; i++) {
+							d = minInfeasibleChains[c][i]; r = minInfeasibleChains[c][i + 1]; a = subgraphEFCHAIN.arc2Idx[d][r];
+							arcsUsedOnMinInfeasibleChain[c] += y[a];
 						}
 					}
 				}
@@ -509,7 +492,7 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 				// Find all cycles of length at most L-1
 				shortCycles = findShortCycles(inst, subgraphEFCHAIN.A, inst.L-1);
 				// print2DVector(shortCycles, "shortCycles", "cycle");
-				if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-STRONG") {
+				if (sol.modelChain == "EF-CHAIN-EXP") {
 					arcsUsedOnShortCycles.resize(shortCycles.size());
 					for (int c = 0; c < shortCycles.size(); c++) {
 						for (int i = 0; i < shortCycles[c].size() - 1; i++) {
@@ -520,7 +503,7 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 						arcsUsedOnShortCycles[c] += y[a];
 					}
 				}
-				else if (sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-STRONG") {
+				else if (sol.modelChain == "EF-CHAIN-CUTSET") {
 					vector<int> S, notS;
 					arcsIntoCycles.resize(shortCycles.size(), 0);
 					// printA(subgraphEFCHAIN.A, inst.wToTau, "A_EFCHAIN");
@@ -528,12 +511,9 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 					for (int c = 0; c < shortCycles.size(); c++) {
 						S = shortCycles[c];
 						notS = findComplement(S, inst.nR + inst.nN);
-						// printVector(S, "S");
-						// printVector(notS, "notS");
 						for (int d : notS) {
 							for (int r : S) {
 								a = subgraphEFCHAIN.arc2Idx[d][r];
-								// cout << "d = " << d << ", r = " << r << ", a = " << a << "\n";
 								if (a != -1) { arcsIntoCycles[c] += y[a];}
 							}
 						}
@@ -567,10 +547,6 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 			subgraphsEEFCHAIN.resize(inst.nN);
 			for (int l = 0; l < inst.nN; l++) {					// loop over all subgraphs
 				subgraphsEEFCHAIN[l] = createSubgraphEEFCHAIN(inst, l + inst.nR);
-
-				//// temporary printing
-				//print2DVector(subgraphsEEFCHAIN[l].arc2Idx, "arc2Idx_" + to_string(l+inst.nR), "donor");
-				//print2DVector(subgraphsEEFCHAIN[l].idx2Arc, "idx2Arc_" + to_string(l+inst.nR), "arc");
 			}
 
 			ySub.resize(inst.nN);
@@ -947,48 +923,35 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 	if (inst.L > 0) {
 		// No additional constraints needed for CF-CHAIN
 
-		if (sol.modelChain == "HCF-CHAIN" || sol.modelChain == "HCF-CHAIN-ALT1" || sol.modelChain == "HCF-CHAIN-ALT2" || sol.modelChain == "HCF-CHAIN-ALT3") {
+		if (sol.modelChain == "HCF-CHAIN") {
 			// Additional constraints 1 for HCF-CHAIN: matching half-chains
-			if (sol.modelChain == "HCF-CHAIN" || sol.modelChain == "HCF-CHAIN-ALT1") { // standard version
-				for (int r = 0; r < inst.nR; r++) {
-					if (firstHalfChainsPerEnd[r].size() + secondHalfChainsPerStart[r].size() > 0) { model.addConstr(firstHalfChainsPerEnd[r] == secondHalfChainsPerStart[r]); }
-				}
-			}
-			else if (sol.modelChain == "HCF-CHAIN-ALT2" || sol.modelChain == "HCF-CHAIN-ALT3") { // alternative version
-				for (int r = 0; r < inst.nR; r++) {
-					if (sol.modelChain == "HCF-CHAIN-ALT2") { // don't enforce that a second half-chain can only be used if the preceding first half-chain has max length
-						if (secondHalfChainsPerStart[r].size() > 0) { model.addConstr(secondHalfChainsPerStart[r] <= firstHalfChainsPerEnd[r]); }
-					}
-					else if (sol.modelChain == "HCF-CHAIN-ALT3") { // do enforce that a second half-chain can only be used if the preceding first half-chain has max length
-						if (secondHalfChainsPerStart[r].size() > 0) { model.addConstr(secondHalfChainsPerStart[r] <= longFirstHalfChainsPerEnd[r]); }
-					}
-				}
+			for (int r = 0; r < inst.nR; r++) {
+				if (firstHalfChainsPerEnd[r].size() + secondHalfChainsPerStart[r].size() > 0) { model.addConstr(firstHalfChainsPerEnd[r] == secondHalfChainsPerStart[r]); }
 			}
 		}
 
-		else if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-CG" || sol.modelChain == "EF-CHAIN-EXP-STRONG" || sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-CG" || sol.modelChain == "EF-CHAIN-CUTSET-STRONG" || sol.modelChain == "EF-CHAIN-MTZ") {
+		else if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-CG" || sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-CG" || sol.modelChain == "EF-CHAIN-MTZ") {
 			// Additional constraints 0 for EF-CHAIN: flow conservation
 			for (int r = 0; r < inst.nR; r++) { // loop over RDPs
 				if (yOut[r].size() + yIn[r].size() > 0) { model.addConstr(yOut[r] <= yIn[r]); }
 			}
 
 			if (inst.L > 1 && inst.L < inst.nR) {
-				if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-STRONG" || sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-STRONG") {
-					// Additional constraints 1 for EF-CHAIN-EXP(2)/EF-CHAIN-CUTSET(2): long chain elimination constraints
-					// Note that for EF-CHAIN-EXP/CUTSET2, arcsUsedOnMinInfeasibleChain contains additional arcs
+				if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-CUTSET") {
+					// Additional constraints 1 for EF-CHAIN-EXP/EF-CHAIN-CUTSET: long chain elimination constraints
 					for (int c = 0; c < minInfeasibleChains.size(); c++) {
 						if (arcsUsedOnMinInfeasibleChain[c].size() > 0) { model.addConstr(arcsUsedOnMinInfeasibleChain[c] <= inst.L - 2); }
 					}
 				}
 			}
 
-			if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-STRONG") {
+			if (sol.modelChain == "EF-CHAIN-EXP") {
 				// Additional constraints 2 for EF-CHAIN-EXP: simple cycle elimination constraints
 				for (int c = 0; c < shortCycles.size(); c++) {
 					if (arcsUsedOnShortCycles[c].size() > 0) { model.addConstr(arcsUsedOnShortCycles[c] <= shortCycles[c].size() - 1); }
 				}
 			}
-			else if (sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-STRONG") {
+			else if (sol.modelChain == "EF-CHAIN-CUTSET") {
 				// Alternative additional constraints 2 for EF-CHAIN-CUTSET: cutset cycle elimination constraints
 				for (int c = 0; c < shortCycles.size(); c++) {
 					for (int r : shortCycles[c]) {
@@ -1517,7 +1480,7 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 				}
 			}
 
-			else if (sol.modelChain == "HCF-CHAIN" || sol.modelChain == "HCF-CHAIN-ALT1" || sol.modelChain == "HCF-CHAIN-ALT2" || sol.modelChain == "HCF-CHAIN-ALT3") {
+			else if (sol.modelChain == "HCF-CHAIN") {
 				vector<vector<vector<int>>> firstHalfChainUsedPerEnd(inst.nR);
 				vector<vector<vector<int>>> secondHalfChainUsedPerStart(inst.nR);
 				vector<vector<int>> h, h1, h2, c;
@@ -1559,12 +1522,12 @@ Solution solveKEP(const Instance& inst, string modelCycle, string modelChain, st
 
 			}
 
-			else if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-CG" || sol.modelChain == "EF-CHAIN-EXP-STRONG" || sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-CG" || sol.modelChain == "EF-CHAIN-CUTSET-STRONG" || sol.modelChain == "EF-CHAIN-MTZ" || sol.modelChain == "EEF-CHAIN-EXP" || sol.modelChain == "EEF-CHAIN-EXP-CG" || sol.modelChain == "EEF-CHAIN-CUTSET" || sol.modelChain == "EEF-CHAIN-CUTSET-CG" || sol.modelChain == "EEF-CHAIN-MTZ" || sol.modelChain == "PIEF-CHAIN") {
+			else if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-CG" || sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-CG" || sol.modelChain == "EF-CHAIN-MTZ" || sol.modelChain == "EEF-CHAIN-EXP" || sol.modelChain == "EEF-CHAIN-EXP-CG" || sol.modelChain == "EEF-CHAIN-CUTSET" || sol.modelChain == "EEF-CHAIN-CUTSET-CG" || sol.modelChain == "EEF-CHAIN-MTZ" || sol.modelChain == "PIEF-CHAIN") {
 				vector<vector<int>> donationPerDonor(inst.nR + inst.nN);		// array containing [r, w_dr] for each donor d that donates
 				int d, r, w;
 
 				// First find the donation per donor
-				if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-CG" || sol.modelChain == "EF-CHAIN-EXP-STRONG" || sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-CG" || sol.modelChain == "EF-CHAIN-CUTSET-STRONG" || sol.modelChain == "EF-CHAIN-MTZ") {
+				if (sol.modelChain == "EF-CHAIN-EXP" || sol.modelChain == "EF-CHAIN-EXP-CG" || sol.modelChain == "EF-CHAIN-CUTSET" || sol.modelChain == "EF-CHAIN-CUTSET-CG" || sol.modelChain == "EF-CHAIN-MTZ") {
 					for (int a = 0; a < subgraphEFCHAIN.idx2Arc.size(); a++) {	// loop over all arcs
 						yval = ceil(y[a].get(GRB_DoubleAttr_X) - EPSILON);		// find variable value
 						if (yval == 1) {										// if the arc is selected
@@ -3136,12 +3099,6 @@ vector<vector<vector<int>>> findChains(const Instance& inst) {
 vector<vector<vector<int>>> findHalfChains(const Instance& inst, bool useLateSplit, bool useAlternative) {
 	// This function returns all half-chains based on max chain length L
 	// Every half-chain is represented in the form {{d_1, d_2, ..., d_l}, rho_h}
-
-	// There are three versions:
-	// - in HCF-CHAIN, chains are split into 2 roughly equal halves
-	// - in HCF-CHAIN-ALT1, chains are split into 2 roughly equal halves, with the first slightly longer than the second
-	// - in HCF-CHAIN-ALT2, chains are split into one big half and one half containing the rest
-	// - in HCF-CHAIN-ALT3, also chains are split into one big half and one half containing the rest, and this is enforced strictly
 
 	vector<vector<int>> curH;					// list of potential half-chains containing l vertices
 	vector<vector<int>> newH;					// list of potential half-chains containing l+1 vertices

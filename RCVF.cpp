@@ -1629,7 +1629,7 @@ Solution solveHCFPIEFusingRCVF(const Instance& inst, double timeLimit, bool prin
 	vector<int> bestSolCycles, bestSolChains;							// the currently best solution for the cycles and chains
 
 	// Start the main loop of the RCVF procedure
-	while (true) {									// the loop will be terminated by any of the "break" statements
+	while (true) {		// the loop will be terminated by any of the "break" statements
 
 		//---------------------------STEP 4: CREATE A REDUCED ILP MODEL---------------------------	
 

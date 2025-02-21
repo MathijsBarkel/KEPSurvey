@@ -35,9 +35,9 @@ int main() {
 	vector<string> chainModels = { "CF-CHAIN", "HCF-CHAIN", "EF-CHAIN-EXP-CG", "EF-CHAIN-MTZ", "EEF-CHAIN-EXP-CG", "EEF-CHAIN-MTZ", "PIEF-CHAIN"};
 	vector<string> hybridModels = { "EF-HYBRID-CG" };
 
-	// These are all implemented models:
+	//// These are all implemented models:
 	//vector<string> cycleModels = { "CF-CYCLE", "HCF-CYCLE", "EF-CYCLE", "EF-CYCLE-CG", "EF-CYCLE-OLD", "EF-CYCLE-OLD-CG", "EF-CYCLE-STRONG", "EF-CYCLE-STRONG-CG", "EEF-CYCLE", "EEF-CYCLE-STRONG", "EEF-CYCLE-OLD", "PIEF-CYCLE", "PIEF-CYCLE-REDUCED"};
-	//vector<string> chainModels = { "CF-CHAIN", "HCF-CHAIN", "HCF-CHAIN-ALT1", "HCF-CHAIN-ALT2", "HCF-CHAIN-ALT3", "EF-CHAIN-EXP", "EF-CHAIN-EXP-CG", "EF-CHAIN-EXP-STRONG", "EF-CHAIN-CUTSET", "EF-CHAIN-CUTSET-CG", "EF-CHAIN-CUTSET-STRONG", "EF-CHAIN-MTZ", "EEF-CHAIN-EXP", "EEF-CHAIN-EXP-CG", "EEF-CHAIN-CUTSET", "EEF-CHAIN-CUTSET-CG", "EEF-CHAIN-MTZ", "PIEF-CHAIN" };
+	//vector<string> chainModels = { "CF-CHAIN", "HCF-CHAIN", "EF-CHAIN-EXP", "EF-CHAIN-EXP-CG", "EF-CHAIN-CUTSET", "EF-CHAIN-CUTSET-CG", "EF-CHAIN-MTZ", "EEF-CHAIN-EXP", "EEF-CHAIN-EXP-CG", "EEF-CHAIN-CUTSET", "EEF-CHAIN-CUTSET-CG", "EEF-CHAIN-MTZ", "PIEF-CHAIN" };
 	//vector<string> hybridModels = { "EF-HYBRID", "EF-HYBRID-CG", "EF-HYBRID-IMPROVED", "EF-HYBRID-IMPROVED-CG" };
 
 	// CHOICE 7:
@@ -47,7 +47,7 @@ int main() {
 
 	// CHOICE 8:
 	// - Determine if the LP relaxation should be computed seperately
-	bool solveLP = false;
+	bool solveLP = true;
 
 	// CHOICE 9: 
 	// - Determine the time limit (in seconds)
@@ -56,13 +56,13 @@ int main() {
 	// CHOICE 10:
 	// - Determine what to print 
 	bool printFullInstanceInfo = true;	// determine if the full instance information(i.e., the compatibility graph) should be printed
-	bool printGurobiLog = true;		// determine whether the Gurobi optimization log should be printed
-	bool printRCVFLog = true;		// determines if a log containing the RCVF progress is printed
-	int printSolution = 1;			// determines which solution statistics to print:
-						// -2: print a summary in just 1 line, excluding LP relaxation value
-						// -1: print a summary in just 1 line, including LP relaxation value
-						// 0: print a detailed report
-						// 1: print a detailed report, including the best feasible solution
+	bool printGurobiLog = true;			// determine whether the Gurobi optimization log should be printed
+	bool printRCVFLog = true;			// determines if a log containing the RCVF progress is printed
+	int printSolution = 1;				// determines which solution statistics to print:
+										// -2: print a summary in just 1 line, excluding LP relaxation value
+										// -1: print a summary in just 1 line, including LP relaxation value
+										// 0: print a detailed report
+										// 1: print a detailed report, including the best feasible solution
 
 	//---------------------------APPLY ALL MODELS TO THE CHOSEN INSTANCE---------------------------
 	
