@@ -4,8 +4,9 @@ This repository contains the instances and code for all model combinations discu
 All algorithms are coded in C++ and require the commercial solver Gurobi (we used version 10.0.3). The files have the following contents:
 - main.h/cpp             - example of front-end code for solving a given instance using any of the ILP models that we consider;
 - main_functions.h/cpp   - code containing our main functions;
-- RCVF.h/cpp             - code for solving combinations of CF-CYCLE, HCF-CYCLE or PIEF-CYCLE with CF-CHAIN or PIEF-CHAIN using reduced cost variable fixing; and
-- helper_functions.h/cpp - code containing miscellaneous simple/supportive functions.
+- RCVF.h/cpp             - code for solving combinations of CF-CYCLE, HCF-CYCLE or PIEF-CYCLE with CF-CHAIN or PIEF-CHAIN using reduced cost variable fixing;
+- helper_functions.h/cpp - code containing miscellaneous simple/supportive functions; and
+- json.hpp               - package required for reading the JSON instance files.
 
 The file main.cpp is meant to be self-explanatory, one simply needs to make the following ten choices:
 1. Choose an instance file containing a compatibility graph(*).
